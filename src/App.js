@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from 'react'
 import {Box,Button,ButtonGroup,Flex,SkeletonText,HStack,IconButton,Input,Text,} from '@chakra-ui/react'
 import { FaLocationArrow, FaTimes } from 'react-icons/fa'
 
-
-
 import { useJsApiLoader, GoogleMap, Marker, Autocomplete, DirectionsRenderer } from '@react-google-maps/api' 
 
 
@@ -53,6 +51,7 @@ const calculateRoute = async() => {
     // eslint-disable-next-line no-undef
     travelMode: google.maps.TravelMode.DRIVING
   })
+  console.log(results)
   setDirection(results)
   setDistance(results.routes[0].legs[0].distance.text)
   setDuration(results.routes[0].legs[0].duration.text)
@@ -83,7 +82,7 @@ if (!isLoaded) {
       h='100vh'
       w='100vw'
     >
-      <Box position='absolute' left={0} top={0} h='100%' w='100%'>
+      <Box className='box' position='absolute' left={0} top={0}  w="100%" h="100%">
         <GoogleMap center={coordinates} zoom={15} 
           mapContainerStyle={{width: '100%', height: '100%'}}
           options={{zoomControl: false, fullscreenControl: false, mapTypeControl: false, streetViewControl: false}}
@@ -95,13 +94,14 @@ if (!isLoaded) {
       </Box>
 
       <Box
-        p={4}
-        borderRadius='lg'
-        mt={4}
+        p={{base:1, md:2, lg: 4}}
+        borderRadius={{base:'sm', md: 'sm', lg: 'lg'}}
+        mt={{base:0, md:0, lg: 4}}
         bgColor='white'
         shadow='base'
-        minW='container.md'
+        minW={{lg: 'container.md'}}
         zIndex='1'
+        
       >
         <HStack spacing={4}>
           <Autocomplete>
