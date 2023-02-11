@@ -1,16 +1,36 @@
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Flex,
-  HStack,
-  IconButton,
-  Input,
-  Text,
-} from '@chakra-ui/react'
+import React, { useState, useEffect } from 'react'
+import {Box,Button,ButtonGroup,Flex,SkeletonText,HStack,IconButton,Input,Text,} from '@chakra-ui/react'
 import { FaLocationArrow, FaTimes } from 'react-icons/fa'
 
+
+
+import { useJsApiLoader, GoogleMap } from '@react-google-maps/api' 
+
+
+
+
 function App() {
+
+// useJsAPILoader gives something similar to isLoading 
+const {isLoaded} = useJsApiLoader({
+  googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API
+})
+
+// Heifel Tower Lat & Lng
+const [coordinates, setCoordinates] = useState({})
+
+//Automatically set the coordinates to be the coordinates of the users location
+useEffect(() => {
+  navigator.geolocation.getCurrentPosition(({coords: {latitude, longitude}}) => {
+    setCoordinates({lat: latitude, lng: longitude})
+  })
+}, [])
+
+if (!isLoaded) {
+  return <SkeletonText />
+}
+
+
   return (
     <Flex
       position='relative'
@@ -22,7 +42,11 @@ function App() {
       h='100vh'
       w='100vw'
     >
-      <Box position='absolute' left={0} top={0} h='100%' w='100%'></Box>
+      <Box position='absolute' left={0} top={0} h='100%' w='100%'>
+        <GoogleMap center={coordinates} zoom={15} mapContainerStyle={{width: '100%', height: '100%'}}>
+    {'Display'}
+        </GoogleMap>
+      </Box>
 
       <Box
         p={4}
