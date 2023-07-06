@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import {Box,Button,ButtonGroup,Flex,SkeletonText,HStack,IconButton,Input,Text,} from '@chakra-ui/react'
+import {Box,Button,ButtonGroup,Flex,SkeletonText,HStack,IconButton,Input,Text,VStack,} from '@chakra-ui/react'
 import { FaLocationArrow, FaTimes } from 'react-icons/fa'
 
 import { useJsApiLoader, GoogleMap, Marker, Autocomplete, DirectionsRenderer } from '@react-google-maps/api' 
@@ -8,6 +8,8 @@ import { useJsApiLoader, GoogleMap, Marker, Autocomplete, DirectionsRenderer } f
 
 
 function App() {
+  const smallScreen = window.screen.width < 600
+  console.log(smallScreen)
 
 // useJsAPILoader gives something similar to isLoading 
 const {isLoaded} = useJsApiLoader({
@@ -102,6 +104,42 @@ if (!isLoaded) {
         zIndex='1'
         
       >
+       { smallScreen ? 
+       <>
+        <VStack spacing={4}>
+          <Autocomplete>
+            <Input type='text' placeholder='Origin' ref={originRef} />
+          </Autocomplete>
+
+          <Autocomplete>
+            <Input type='text' placeholder='Destination' ref={destinationRef} />
+          </Autocomplete>
+          
+          <ButtonGroup>
+            <Button colorScheme='pink' type='submit' onClick={calculateRoute}>
+              Calculate Route
+            </Button>
+            
+            <IconButton
+              aria-label='center back'
+              icon={<FaTimes />}
+              onClick={clearRoute}
+            />
+          </ButtonGroup>
+        </VStack>
+        <VStack spacing={4} mt={4} justifyContent='space-between'>
+          <Text>Distance: {distance}</Text>
+          <Text>Duration: {duration}</Text>
+          <IconButton
+            aria-label='center back'
+            icon={<FaLocationArrow />}
+            isRound
+            //Setting this button to always return to your default coordinate
+            onClick={() => map?.panTo(coordinates)}
+          />
+        </VStack>
+       </>
+        :<>
         <HStack spacing={4}>
           <Autocomplete>
             <Input type='text' placeholder='Origin' ref={originRef} />
@@ -134,6 +172,7 @@ if (!isLoaded) {
             onClick={() => map?.panTo(coordinates)}
           />
         </HStack>
+        </>}
       </Box>
     </Flex>
   )
